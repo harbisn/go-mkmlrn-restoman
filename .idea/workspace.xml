@@ -4,7 +4,17 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f9dd08fc-1b1d-4d12-bcb8-c3e4c41bf1b7" name="Changes" comment="" />
+    <list default="true" id="f9dd08fc-1b1d-4d12-bcb8-c3e4c41bf1b7" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/pkg/api/routers/menu.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/app.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/database/db.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controller/menu_controller.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/api/handlers/menu.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/main" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/menu.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/models/menu.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/route/menu_route.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/util/util.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/util/util.go" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -59,6 +69,15 @@
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/pkg/api" />
+      <recent name="$PROJECT_DIR$/pkg/routers" />
+      <recent name="$PROJECT_DIR$/pkg/handlers" />
+      <recent name="$PROJECT_DIR$/pkg/services" />
+      <recent name="$PROJECT_DIR$/pkg/database" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration default="true" type="GoApplicationRunConfiguration" factoryName="Go Application">
       <module name="go-mkmlrn-restoman" />
@@ -109,7 +128,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="main" />
+                        <option value="master" />
                       </list>
                     </value>
                   </entry>
