@@ -3,18 +3,21 @@ package models
 import (
 	"github.com/harbisn/go-mkmlrn-restoman/pkg/database"
 	"gorm.io/gorm"
+	"time"
 )
 
 var db *gorm.DB
 
 type Menu struct {
-	gorm.Model
-	Name        string `db:"name"`
-	Code        string `db:"code"`
-	Status      string `db:"status"`
-	Category    string `db:"category"`
-	Price       int32  `db:"price"`
-	Description string `db:"description"`
+	ID          uint64    `json:"id" db:"id" gorm:"primary_key"`
+	Name        string    `json:"name" db:"name"`
+	Code        string    `json:"code" db:"code"`
+	Status      string    `json:"status" db:"status"`
+	Category    string    `json:"category" db:"category"`
+	Price       int32     `json:"price" db:"price"`
+	Description string    `json:"description" db:"description"`
+	CreatedAt   time.Time `json:"createdAt" db:"created_at"`
+	UpdatedAt   time.Time `json:"updatedAt" db:"updated_at"`
 }
 
 func init() {
@@ -34,7 +37,7 @@ func GetAllMenu() []Menu {
 
 func GetMenuByCode(Code string) (*Menu, *gorm.DB) {
 	var getMenu Menu
-	db := db.Where("CODE=?", Code).Find(&getMenu)
+	db := db.Where("code = ?", Code).Find(&getMenu)
 	return &getMenu, db
 }
 
@@ -43,7 +46,7 @@ func (m *Menu) CreateMenu() *Menu {
 	return m
 }
 
-func (m *Menu) UpdateMenu(ID uint) *Menu {
+func (m *Menu) UpdateMenu(ID uint64) *Menu {
 	m.ID = ID
 	db.Save(m)
 	return m

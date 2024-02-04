@@ -73,7 +73,7 @@ func UpdateMenu(w http.ResponseWriter, r *http.Request) {
 	if UpdateMenu.Price != menuDetails.Price {
 		menuDetails.Price = UpdateMenu.Price
 	}
-	m := UpdateMenu.UpdateMenu(menuDetails.ID)
+	m := menuDetails.UpdateMenu(menuDetails.ID)
 	res, _ := json.Marshal(m)
 	w.WriteHeader(http.StatusOK)
 	_, err := w.Write(res)
