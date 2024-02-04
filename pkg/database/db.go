@@ -13,7 +13,7 @@ var (
 )
 
 func Connect() {
-	dsn := viper.GetString("database.dsn")
+	dsn := viper.GetString("database.dsn") // dsn -> "host=some user=some password=some dbname=some port=some sslmode=disable"
 	d, err := gorm.Open(psql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic(err)
