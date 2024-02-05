@@ -8,6 +8,9 @@ import (
 func CreateMenu(w http.ResponseWriter, r *http.Request) {
 	CreateMenu := &models.Menu{}
 	ParseJSONRequestBody(r, CreateMenu)
+	userId := r.Header.Get("x-user-id")
+	CreateMenu.CreatedBy = userId
+	CreateMenu.UpdatedBy = userId
 	m := CreateMenu.CreateMenu()
 	SendJSONResponse(w, http.StatusCreated, m)
 }
@@ -42,6 +45,7 @@ func UpdateMenu(w http.ResponseWriter, r *http.Request) {
 	if UpdateMenu.Price != menuDetails.Price {
 		menuDetails.Price = UpdateMenu.Price
 	}
+	menuDetails.UpdatedBy = r.Header.Get("x-user-id")
 	m := menuDetails.UpdateMenu(menuDetails.ID)
 	SendJSONResponse(w, http.StatusOK, m)
 }
@@ -49,6 +53,6 @@ func UpdateMenu(w http.ResponseWriter, r *http.Request) {
 func DeleteMenu(w http.ResponseWriter, r *http.Request) {
 	id, err := ParseIDFromRequestToUint64(r, "id")
 	ValidateInternalError(w, err)
-	menu := models.DeleteMenu(id)
+	menu, _ := models.DeleteMenu(id)
 	SendJSONResponse(w, http.StatusOK, menu)
 }

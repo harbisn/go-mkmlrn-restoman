@@ -6,6 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="f9dd08fc-1b1d-4d12-bcb8-c3e4c41bf1b7" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/api/handlers/menu.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/api/handlers/menu.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/database/db.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/database/db.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pkg/models/menu.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/models/menu.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -38,9 +42,9 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 8
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
   <component name="ProjectId" id="2brEJiqkfYozFasQTf0EfySlo4I" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -49,11 +53,13 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "DefaultGoTemplateProperty": "Go File",
+    "Go Build.go build github.com/harbisn/go-mkmlrn-restoman/cmd.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.go.format.on.save.advertiser.fired": "true",
     "RunOnceActivity.go.formatter.settings.were.checked": "true",
     "RunOnceActivity.go.migrated.go.modules.settings": "true",
+    "RunOnceActivity.go.modules.automatic.dependencies.download": "true",
     "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
     "RunOnceActivity.go.watchers.conflict.with.on.save.actions.check.performed": "true",
     "WebServerToolWindowFactoryState": "false",
@@ -64,16 +70,16 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.pluginManager"
+    "settings.editor.selected.configurable": "preferences.lookFeel"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/pkg/api/handlers" />
       <recent name="$PROJECT_DIR$/pkg/api" />
       <recent name="$PROJECT_DIR$/pkg/routers" />
       <recent name="$PROJECT_DIR$/pkg/handlers" />
       <recent name="$PROJECT_DIR$/pkg/services" />
-      <recent name="$PROJECT_DIR$/pkg/database" />
     </key>
   </component>
   <component name="RunManager" selected="Go Build.go build github.com/harbisn/go-mkmlrn-restoman/cmd">
@@ -157,16 +163,5 @@
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/pkg/api/handlers/menu.go</url>
-          <line>12</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

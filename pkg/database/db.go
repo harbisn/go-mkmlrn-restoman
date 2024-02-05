@@ -1,28 +1,26 @@
 package database
 
 import (
+	"fmt"
+	"github.com/go-pg/pg/v10"
 	"github.com/spf13/viper"
-	psql "gorm.io/driver/postgres"
-	"gorm.io/gorm"
 	"log"
 	"strings"
 )
 
-var (
-	db *gorm.DB
-)
-
-func Connect() {
-	dsn := viper.GetString("database.dsn") // dsn -> "host=some user=some password=some dbname=some port=some sslmode=disable"
-	d, err := gorm.Open(psql.Open(dsn), &gorm.Config{})
-	if err != nil {
-		panic(err)
+func Connect() (con *pg.DB) {
+	options := &pg.Options{
+		User:     viper.GetString("database.user"),
+		Password: viper.GetString("database.password"),
+		Addr:     fmt.Sprintf("%s:%s", viper.GetString("database.host"), viper.GetString("database.port")),
+		Database: viper.GetString("database.dbName"),
+		PoolSize: viper.GetInt("database.poolSize"),
 	}
-	db = d
-}
-
-func GetDB() *gorm.DB {
-	return db
+	con = pg.Connect(options)
+	if con == nil {
+		log.Fatalf("cannot connect to postgres")
+	}
+	return
 }
 
 func loadConfig() {
@@ -41,11 +39,14 @@ func loadConfig() {
 
 func init() {
 	loadConfig()
-	requiredFields := []string{"database.dsn"}
+	requiredFields := []string{"database.user", "database.password", "database.host",
+		"database.port", "database.dbName", "database.poolSize"}
+
 	for _, field := range requiredFields {
 		if !viper.IsSet(field) {
 			log.Fatalf("Missing required configuration field: %s", field)
 			return
 		}
 	}
+
 }
