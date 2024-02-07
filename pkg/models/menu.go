@@ -4,7 +4,6 @@ import (
 	"github.com/go-pg/pg/v10"
 	"github.com/go-pg/pg/v10/orm"
 	"github.com/harbisn/go-mkmlrn-restoman/pkg/database"
-	"strings"
 	"time"
 )
 
@@ -30,13 +29,11 @@ type Menu struct {
 func init() {
 	db = database.Connect()
 	err := db.Model((*Menu)(nil)).CreateTable(&orm.CreateTableOptions{
-		Temp: false,
+		Temp:        false,
+		IfNotExists: true,
 	})
 	if err != nil {
-		var alreadyExists = strings.Contains(err.Error(), "already exists")
-		if !alreadyExists {
-			panic(err)
-		}
+		panic(err)
 	}
 }
 
