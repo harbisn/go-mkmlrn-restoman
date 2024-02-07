@@ -49,3 +49,27 @@ func ValidateInternalError(w http.ResponseWriter, err error) {
 		return
 	}
 }
+
+func QuerySpecification(r *http.Request, defPage int, defSize int, params []string) (int, int, string, map[string]interface{}) {
+	page, _ := strconv.Atoi(r.URL.Query().Get("page"))
+	if page == 0 {
+		page = defPage
+	}
+	size, _ := strconv.Atoi(r.URL.Query().Get("size"))
+	if size == 0 {
+		size = defSize
+	}
+	offset := (page - 1) * size
+	order := r.URL.Query().Get("order")
+
+	filters := make(map[string]interface{})
+
+	for _, param := range params {
+		value := r.URL.Query().Get(param)
+		if value != "" {
+			filters[param] = value
+		}
+	}
+
+	return offset, size, order, filters
+}

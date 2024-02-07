@@ -4,6 +4,7 @@ import (
 	"github.com/go-pg/pg/v10"
 	"github.com/go-pg/pg/v10/orm"
 	"github.com/harbisn/go-mkmlrn-restoman/pkg/database"
+	"strings"
 	"time"
 )
 
@@ -47,13 +48,31 @@ func (m *Menu) CreateMenu() *Menu {
 	return m
 }
 
-func GetAllMenu() []Menu {
-	var Menus []Menu
-	err := db.Model(&Menus).Select()
-	if err != nil {
-		return nil
+func GetAllMenu(offset, size int, order string, filters map[string]interface{}) ([]Menu, error) {
+	var menus []Menu
+	query := db.Model(&menus).Limit(size).Offset(offset)
+	if order != "" {
+		sorters := strings.Split(order, ",")
+		for _, sorter := range sorters {
+			query.Order(sorter)
+		}
 	}
-	return Menus
+	for key, value := range filters {
+		switch key {
+		case "highestPrice":
+			key = strings.ReplaceAll(key, key, "price")
+			query = query.Where(key+" <= ?", value)
+		case "lowestPrice":
+			key = strings.ReplaceAll(key, key, "price")
+			query = query.Where(key+" >= ?", value)
+		default:
+			query = query.Where(key+" = ?", value)
+		}
+	}
+	if err := query.Select(); err != nil {
+		return nil, err
+	}
+	return menus, nil
 }
 
 func GetMenuById(ID uint64) (*Menu, *pg.DB) {
