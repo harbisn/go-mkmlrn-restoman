@@ -1,17 +1,7 @@
 package models
 
 import (
-	"github.com/go-pg/pg/v10"
-	"github.com/go-pg/pg/v10/orm"
-	"github.com/harbisn/go-mkmlrn-restoman/pkg/database"
-	"strings"
 	"time"
-)
-
-var db *pg.DB
-
-var (
-	location, _ = time.LoadLocation("Asia/Jakarta")
 )
 
 type Menu struct {
@@ -19,86 +9,39 @@ type Menu struct {
 	Name        string    `json:"name"`
 	Status      string    `json:"status"`
 	Category    string    `json:"category"`
-	Price       int32     `json:"price"`
 	Description string    `json:"description"`
+	Price       int32     `json:"price"`
 	CreatedBy   string    `json:"createdBy"`
 	CreatedAt   time.Time `json:"createdAt"`
 	UpdatedBy   string    `json:"UpdatedBy"`
 	UpdatedAt   time.Time `json:"updatedAt"`
 }
 
-func init() {
-	db = database.Connect()
-	err := db.Model((*Menu)(nil)).CreateTable(&orm.CreateTableOptions{
-		Temp:        false,
-		IfNotExists: true,
-	})
-	if err != nil {
-		panic(err)
-	}
-}
-
 func (m *Menu) CreateMenu() *Menu {
-	m.CreatedAt = time.Now().UTC().In(location)
-	m.UpdatedAt = time.Now().UTC().In(location)
-	_, err := db.Model(m).Insert()
-	if err != nil {
-		return nil
-	}
-	return m
+	return Create(m).(*Menu)
 }
 
 func GetAllMenu(offset, size int, order string, filters map[string]interface{}) ([]Menu, error) {
 	var menus []Menu
-	query := db.Model(&menus).Limit(size).Offset(offset)
-	if order != "" {
-		sorters := strings.Split(order, ",")
-		for _, sorter := range sorters {
-			query.Order(sorter)
-		}
-	}
-	for key, value := range filters {
-		switch key {
-		case "highestPrice":
-			key = strings.ReplaceAll(key, key, "price")
-			query = query.Where(key+" <= ?", value)
-		case "lowestPrice":
-			key = strings.ReplaceAll(key, key, "price")
-			query = query.Where(key+" >= ?", value)
-		default:
-			query = query.Where(key+" = ?", value)
-		}
-	}
-	if err := query.Select(); err != nil {
+	if err := GetAll(&menus, offset, size, order, filters); err != nil {
 		return nil, err
 	}
 	return menus, nil
 }
 
-func GetMenuById(ID uint64) (*Menu, *pg.DB) {
+func GetMenuById(ID uint64) *Menu {
 	var getMenu Menu
-	err := db.Model(&getMenu).Where("id = ?", ID).Select()
-	if err != nil {
-		return nil, nil
-	}
-	return &getMenu, db
+	GetById(&getMenu, ID)
+	return &getMenu
 }
 
-func (m *Menu) UpdateMenu(ID uint64) *Menu {
-	m.ID = ID
-	m.UpdatedAt = time.Now().UTC().In(location)
-	_, err := db.Model(m).WherePK().Update()
-	if err != nil {
-		return nil
-	}
+func (m *Menu) UpdateMenu() *Menu {
+	Update(m)
 	return m
 }
 
-func DeleteMenu(ID uint64) (*Menu, *pg.DB) {
+func DeleteMenu(ID uint64) *Menu {
 	var deletedMenu Menu
-	_, err := db.Model(&deletedMenu).Where("id = ?", ID).Delete()
-	if err != nil {
-		return nil, nil
-	}
-	return &deletedMenu, db
+	Delete(&deletedMenu, ID)
+	return &deletedMenu
 }

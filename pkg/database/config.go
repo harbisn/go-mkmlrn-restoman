@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-func Connect() (con *pg.DB) {
+func Connect() (db *pg.DB) {
 	options := &pg.Options{
 		User:     viper.GetString("datasource.user"),
 		Password: viper.GetString("datasource.password"),
@@ -16,8 +16,8 @@ func Connect() (con *pg.DB) {
 		Database: viper.GetString("datasource.database"),
 		PoolSize: viper.GetInt("datasource.poolSize"),
 	}
-	con = pg.Connect(options)
-	if con == nil {
+	db = pg.Connect(options)
+	if db == nil {
 		log.Fatalf("cannot connect to postgres")
 	}
 	return

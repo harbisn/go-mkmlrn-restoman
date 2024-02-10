@@ -50,7 +50,7 @@ func ValidateInternalError(w http.ResponseWriter, err error) {
 	}
 }
 
-func QuerySpecification(r *http.Request, params []string) (int, int, string, map[string]interface{}) {
+func GetFilterAndPagination(r *http.Request, params []string) (int, int, string, map[string]interface{}) {
 	page, _ := strconv.Atoi(r.URL.Query().Get("page"))
 	if page == 0 {
 		page = 1
@@ -75,20 +75,22 @@ func QuerySpecification(r *http.Request, params []string) (int, int, string, map
 }
 
 type PaginationResponse struct {
-	Content interface{}            `json:"content"`
-	Size    int                    `json:"size"`
-	Page    int                    `json:"page"`
-	Order   string                 `json:"order"`
-	Filter  map[string]interface{} `json:"filter"`
+	Content      interface{}            `json:"content"`
+	TotalElement int                    `json:"totalElement"`
+	Page         int                    `json:"page"`
+	Size         int                    `json:"size"`
+	Order        string                 `json:"order"`
+	Filter       map[string]interface{} `json:"filter"`
 }
 
-func Paginate(content interface{}, size, offset int, order string,
+func Paginate(content interface{}, totalElement, size, offset int, order string,
 	filter map[string]interface{}) PaginationResponse {
 	return PaginationResponse{
-		Content: content,
-		Size:    size,
-		Page:    (offset / size) + 1,
-		Order:   order,
-		Filter:  filter,
+		Content:      content,
+		TotalElement: totalElement,
+		Page:         (offset / size) + 1,
+		Size:         size,
+		Order:        order,
+		Filter:       filter,
 	}
 }

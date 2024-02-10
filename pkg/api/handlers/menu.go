@@ -18,23 +18,23 @@ func CreateMenu(w http.ResponseWriter, r *http.Request) {
 func GetAllMenu(w http.ResponseWriter, r *http.Request) {
 	ParseJSONRequestBody(r, CreateMenu)
 	params := []string{"status", "category", "highestPrice", "lowestPrice"}
-	offset, size, order, filters := QuerySpecification(r, params)
+	offset, size, order, filters := GetFilterAndPagination(r, params)
 	menus, _ := models.GetAllMenu(offset, size, order, filters)
-	pageMenus := Paginate(menus, size, offset, order, filters)
+	pageMenus := Paginate(menus, len(menus), size, offset, order, filters)
 	SendJSONResponse(w, http.StatusOK, pageMenus)
 }
 
 func GetMenuById(w http.ResponseWriter, r *http.Request) {
 	id, err := ParseIDFromRequestToUint64(r, "id")
 	ValidateInternalError(w, err)
-	menuDetails, _ := models.GetMenuById(id)
+	menuDetails := models.GetMenuById(id)
 	SendJSONResponse(w, http.StatusOK, menuDetails)
 }
 
 func UpdateMenu(w http.ResponseWriter, r *http.Request) {
 	id, err := ParseIDFromRequestToUint64(r, "id")
 	ValidateInternalError(w, err)
-	menuDetails, _ := models.GetMenuById(id)
+	menuDetails := models.GetMenuById(id)
 	UpdateMenu := &models.Menu{}
 	ParseJSONRequestBody(r, UpdateMenu)
 	if UpdateMenu.Name != "" {
@@ -50,13 +50,13 @@ func UpdateMenu(w http.ResponseWriter, r *http.Request) {
 		menuDetails.Price = UpdateMenu.Price
 	}
 	menuDetails.UpdatedBy = r.Header.Get("x-user-id")
-	m := menuDetails.UpdateMenu(menuDetails.ID)
+	m := menuDetails.UpdateMenu()
 	SendJSONResponse(w, http.StatusOK, m)
 }
 
 func DeleteMenu(w http.ResponseWriter, r *http.Request) {
 	id, err := ParseIDFromRequestToUint64(r, "id")
 	ValidateInternalError(w, err)
-	menu, _ := models.DeleteMenu(id)
+	menu := models.DeleteMenu(id)
 	SendJSONResponse(w, http.StatusOK, menu)
 }
