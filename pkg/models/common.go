@@ -18,7 +18,7 @@ var (
 
 func init() {
 	db = database.Connect()
-	InitializeTables((*Menu)(nil), (*Room)(nil))
+	InitializeTables((*Menu)(nil), (*Room)(nil), (*Reservation)(nil))
 }
 
 func InitializeTables(models ...interface{}) {

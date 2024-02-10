@@ -21,7 +21,7 @@ func (m *Menu) CreateMenu() *Menu {
 	return Create(m).(*Menu)
 }
 
-func GetAllMenu(offset, size int, order string, filters map[string]interface{}) ([]Menu, error) {
+func GetAllMenus(offset, size int, order string, filters map[string]interface{}) ([]Menu, error) {
 	var menus []Menu
 	if err := GetAll(&menus, offset, size, order, filters); err != nil {
 		return nil, err
@@ -29,7 +29,7 @@ func GetAllMenu(offset, size int, order string, filters map[string]interface{}) 
 	return menus, nil
 }
 
-func GetMenuById(ID uint64) *Menu {
+func GetMenuByID(ID uint64) *Menu {
 	var getMenu Menu
 	GetById(&getMenu, ID)
 	return &getMenu

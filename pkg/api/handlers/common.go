@@ -23,9 +23,9 @@ func ParseIDFromRequestToUint64(r *http.Request, key string) (uint64, error) {
 	return id, nil
 }
 
-func ParseJSONRequestBody(r *http.Request, x interface{}) {
+func ParseJSONRequestBody(r *http.Request, data interface{}) {
 	if body, err := io.ReadAll(r.Body); err == nil {
-		if err := json.Unmarshal(body, x); err != nil {
+		if err := json.Unmarshal(body, data); err != nil {
 			return
 		}
 	}

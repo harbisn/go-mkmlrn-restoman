@@ -10,6 +10,7 @@ type Room struct {
 	Status       string    `json:"status"`
 	Capacity     int8      `json:"capacity"`
 	Description  string    `json:"description"`
+	Type         string    `json:"type"`
 	PricePerHour int32     `json:"pricePerHour"`
 	CreatedBy    string    `json:"createdBy"`
 	CreatedAt    time.Time `json:"createdAt"`
@@ -21,7 +22,7 @@ func (r *Room) CreateRoom() *Room {
 	return Create(r).(*Room)
 }
 
-func GetAllRoom(offset, size int, order string, filters map[string]interface{}) ([]Room, error) {
+func GetAllRooms(offset, size int, order string, filters map[string]interface{}) ([]Room, error) {
 	var rooms []Room
 	if err := GetAll(&rooms, offset, size, order, filters); err != nil {
 		return nil, err
@@ -29,7 +30,7 @@ func GetAllRoom(offset, size int, order string, filters map[string]interface{}) 
 	return rooms, nil
 }
 
-func GetRoomById(ID uint64) *Room {
+func GetRoomByID(ID uint64) *Room {
 	var getRoom Room
 	GetById(&getRoom, ID)
 	return &getRoom
