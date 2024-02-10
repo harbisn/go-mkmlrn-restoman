@@ -10,11 +10,11 @@ import (
 
 func Connect() (con *pg.DB) {
 	options := &pg.Options{
-		User:     viper.GetString("database.user"),
-		Password: viper.GetString("database.password"),
-		Addr:     fmt.Sprintf("%s:%s", viper.GetString("database.host"), viper.GetString("database.port")),
-		Database: viper.GetString("database.dbName"),
-		PoolSize: viper.GetInt("database.poolSize"),
+		User:     viper.GetString("datasource.user"),
+		Password: viper.GetString("datasource.password"),
+		Addr:     fmt.Sprintf("%s:%s", viper.GetString("datasource.host"), viper.GetString("datasource.port")),
+		Database: viper.GetString("datasource.database"),
+		PoolSize: viper.GetInt("datasource.poolSize"),
 	}
 	con = pg.Connect(options)
 	if con == nil {
@@ -39,8 +39,8 @@ func loadConfig() {
 
 func init() {
 	loadConfig()
-	requiredFields := []string{"database.user", "database.password", "database.host",
-		"database.port", "database.dbName", "database.poolSize"}
+	requiredFields := []string{"datasource.user", "datasource.password", "datasource.host",
+		"datasource.port", "datasource.database", "datasource.poolSize"}
 
 	for _, field := range requiredFields {
 		if !viper.IsSet(field) {

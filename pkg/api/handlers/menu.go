@@ -18,9 +18,10 @@ func CreateMenu(w http.ResponseWriter, r *http.Request) {
 func GetAllMenu(w http.ResponseWriter, r *http.Request) {
 	ParseJSONRequestBody(r, CreateMenu)
 	params := []string{"status", "category", "highestPrice", "lowestPrice"}
-	offset, size, order, filters := QuerySpecification(r, 1, 10, params)
+	offset, size, order, filters := QuerySpecification(r, params)
 	menus, _ := models.GetAllMenu(offset, size, order, filters)
-	SendJSONResponse(w, http.StatusOK, menus)
+	pageMenus := Paginate(menus, size, offset, order, filters)
+	SendJSONResponse(w, http.StatusOK, pageMenus)
 }
 
 func GetMenuById(w http.ResponseWriter, r *http.Request) {
