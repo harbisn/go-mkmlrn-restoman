@@ -19,20 +19,3 @@ type ReservationRoom struct {
 	UpdatedBy       string    `json:"UpdatedBy"`
 	UpdatedAt       time.Time `json:"updatedAt"`
 }
-
-func (reservationRoom *ReservationRoom) CreateReservationRoom() *ReservationRoom {
-	return Create(reservationRoom).(*ReservationRoom)
-}
-
-func GetAllReservationRooms(offset, size int, order string, filters map[string]interface{}) ([]ReservationRoom, error) {
-	var reservationRooms []ReservationRoom
-	if err := GetAll(&reservationRooms, offset, size, order, filters); err != nil {
-		return nil, err
-	}
-	return reservationRooms, nil
-}
-
-func (reservationRoom *ReservationRoom) UpdateReservationRoom() *ReservationRoom {
-	Update(reservationRoom)
-	return reservationRoom
-}

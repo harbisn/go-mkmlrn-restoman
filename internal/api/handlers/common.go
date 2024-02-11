@@ -3,7 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"github.com/gorilla/mux"
-	"github.com/harbisn/go-mkmlrn-restoman/pkg/models"
+	"github.com/harbisn/go-mkmlrn-restoman/internal/models"
 	"io"
 	"net/http"
 	"strconv"
@@ -92,12 +92,13 @@ func ConvertParamJsonToDB(s string) string {
 }
 
 func Paginate(content interface{}, totalElement, size, offset int, order string,
-	filter map[string]interface{}) models.PaginationResponse {
-	return models.PaginationResponse{
+	filter map[string]interface{}) models.PageableDto {
+	return models.PageableDto{
 		Content:      content,
 		TotalElement: totalElement,
 		Page:         (offset / size) + 1,
 		Size:         size,
+		Offset:       offset,
 		Order:        order,
 		Filter:       filter,
 	}

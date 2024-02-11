@@ -1,43 +1,21 @@
-package models
+package repository
 
 import (
 	"github.com/go-pg/pg/v10"
-	"github.com/go-pg/pg/v10/orm"
-	"github.com/harbisn/go-mkmlrn-restoman/pkg/database"
+	"github.com/harbisn/go-mkmlrn-restoman/internal/models"
 	"reflect"
 	"regexp"
 	"strings"
 	"time"
 )
 
-var db *pg.DB
-
-var (
-	location, _ = time.LoadLocation("Asia/Jakarta")
-)
-
-func init() {
-	db = database.Connect()
-	InitializeTables((*Menu)(nil), (*Room)(nil), (*Reservation)(nil), (*ReservationRoom)(nil))
-}
-
-func InitializeTables(models ...interface{}) {
-	for _, model := range models {
-		err := db.Model(model).CreateTable(&orm.CreateTableOptions{
-			Temp:        false,
-			IfNotExists: true,
-		})
-		if err != nil {
-			panic(err)
-		}
-	}
-}
+var location, _ = time.LoadLocation("Asia/Jakarta")
 
 func GetCurrentTime() time.Time {
 	return time.Now().UTC().In(location)
 }
 
-func Create(model interface{}) interface{} {
+func Create(db *pg.DB, model interface{}) interface{} {
 	currentTime := GetCurrentTime()
 	reflect.ValueOf(model).Elem().FieldByName("CreatedAt").Set(reflect.ValueOf(currentTime))
 	reflect.ValueOf(model).Elem().FieldByName("UpdatedAt").Set(reflect.ValueOf(currentTime))
@@ -48,16 +26,16 @@ func Create(model interface{}) interface{} {
 	return model
 }
 
-func GetAll(models interface{}, offset, size int, order string, filters map[string]interface{}) error {
-	query := db.Model(models).Limit(size).Offset(offset)
-	if order != "" {
-		sorters := strings.Split(order, ",")
+func GetAll(db *pg.DB, model interface{}, p models.PageableDto) error {
+	query := db.Model(model).Limit(p.Size).Offset(p.Offset)
+	if p.Order != "" {
+		sorters := strings.Split(p.Order, ",")
 		for _, sorter := range sorters {
 			query.Order(sorter)
 		}
 	}
 	pattern := regexp.MustCompile(`^(lowest|highest)`)
-	for key, value := range filters {
+	for key, value := range p.Filter {
 		if strings.Contains(key, "highest") {
 			key = pattern.ReplaceAllString(key, "")
 			query = query.Where(key+" <= ?", value)
@@ -74,7 +52,7 @@ func GetAll(models interface{}, offset, size int, order string, filters map[stri
 	return nil
 }
 
-func GetById(model interface{}, ID uint64) interface{} {
+func GetById(db *pg.DB, model interface{}, ID uint64) interface{} {
 	err := db.Model(model).Where("id = ?", ID).Select()
 	if err != nil {
 		return nil
@@ -82,7 +60,7 @@ func GetById(model interface{}, ID uint64) interface{} {
 	return model
 }
 
-func Update(model interface{}) interface{} {
+func Update(db *pg.DB, model interface{}) interface{} {
 	currentTime := GetCurrentTime()
 	reflect.ValueOf(model).Elem().FieldByName("UpdatedAt").Set(reflect.ValueOf(currentTime))
 	_, err := db.Model(model).WherePK().Update()
@@ -92,7 +70,7 @@ func Update(model interface{}) interface{} {
 	return model
 }
 
-func Delete(model interface{}, ID uint64) interface{} {
+func Delete(db *pg.DB, model interface{}, ID uint64) interface{} {
 	_, err := db.Model(model).Where("id = ?", ID).Delete()
 	if err != nil {
 		return nil

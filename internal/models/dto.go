@@ -2,11 +2,12 @@ package models
 
 import "time"
 
-type PaginationResponse struct {
+type PageableDto struct {
 	Content      interface{}            `json:"content"`
 	TotalElement int                    `json:"totalElement"`
 	Page         int                    `json:"page"`
 	Size         int                    `json:"size"`
+	Offset       int                    `json:"offset"`
 	Order        string                 `json:"order"`
 	Filter       map[string]interface{} `json:"filter"`
 }
@@ -16,7 +17,7 @@ type RoomReservationDto struct {
 	CustomerName string    `json:"customerName"`
 	PhoneNumber  string    `json:"phoneNumber"`
 	Email        string    `json:"email"`
-	RoomID       uint64    `json:"roomId" pg:"fk"`
+	RoomID       uint64    `json:"roomId"`
 	RoomName     string    `json:"roomName"`
 	Attendee     int8      `json:"attendee"`
 	StartAt      time.Time `json:"StartAt"`

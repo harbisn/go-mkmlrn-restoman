@@ -9,6 +9,7 @@ import (
 )
 
 func Connect() (db *pg.DB) {
+	loadConfig()
 	options := &pg.Options{
 		User:     viper.GetString("datasource.user"),
 		Password: viper.GetString("datasource.password"),
@@ -35,10 +36,7 @@ func loadConfig() {
 	viper.SetEnvPrefix("GO_MKMLRN_RESTOMAN")
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 	viper.AutomaticEnv()
-}
 
-func init() {
-	loadConfig()
 	requiredFields := []string{"datasource.user", "datasource.password", "datasource.host",
 		"datasource.port", "datasource.database", "datasource.poolSize"}
 
