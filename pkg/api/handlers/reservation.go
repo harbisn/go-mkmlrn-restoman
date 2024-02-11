@@ -5,16 +5,6 @@ import (
 	"net/http"
 )
 
-func CreateReservation(w http.ResponseWriter, r *http.Request) {
-	CreateReservation := &models.Reservation{}
-	ParseJSONRequestBody(r, CreateReservation)
-	userId := r.Header.Get("x-user-id")
-	CreateReservation.CreatedBy = userId
-	CreateReservation.UpdatedBy = userId
-	reservation := CreateReservation.CreateReservation()
-	SendJSONResponse(w, http.StatusCreated, reservation)
-}
-
 func GetAllReservations(w http.ResponseWriter, r *http.Request) {
 	params := []string{"customerName", "phoneNumber", "email"}
 	offset, size, order, filters := GetFilterAndPagination(r, params)
@@ -52,3 +42,5 @@ func UpdateReservation(w http.ResponseWriter, r *http.Request) {
 	m := reservationDetails.UpdateReservation()
 	SendJSONResponse(w, http.StatusOK, m)
 }
+
+// TODO: cancel reservation --> automatically cancel all reservation_room

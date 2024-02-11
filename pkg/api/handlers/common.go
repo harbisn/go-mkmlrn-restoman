@@ -3,9 +3,11 @@ package handlers
 import (
 	"encoding/json"
 	"github.com/gorilla/mux"
+	"github.com/harbisn/go-mkmlrn-restoman/pkg/models"
 	"io"
 	"net/http"
 	"strconv"
+	"unicode"
 )
 
 func ParseIDFromRequestToUint64(r *http.Request, key string) (uint64, error) {
@@ -67,25 +69,31 @@ func GetFilterAndPagination(r *http.Request, params []string) (int, int, string,
 	for _, param := range params {
 		value := r.URL.Query().Get(param)
 		if value != "" {
-			filters[param] = value
+			filters[ConvertParamJsonToDB(param)] = value
 		}
 	}
 
 	return offset, size, order, filters
 }
 
-type PaginationResponse struct {
-	Content      interface{}            `json:"content"`
-	TotalElement int                    `json:"totalElement"`
-	Page         int                    `json:"page"`
-	Size         int                    `json:"size"`
-	Order        string                 `json:"order"`
-	Filter       map[string]interface{} `json:"filter"`
+func ConvertParamJsonToDB(s string) string {
+	var res []rune
+	for i, r := range s {
+		if unicode.IsUpper(r) {
+			if i > 0 {
+				res = append(res, '_')
+			}
+			res = append(res, unicode.ToLower(r))
+		} else {
+			res = append(res, r)
+		}
+	}
+	return string(res)
 }
 
 func Paginate(content interface{}, totalElement, size, offset int, order string,
-	filter map[string]interface{}) PaginationResponse {
-	return PaginationResponse{
+	filter map[string]interface{}) models.PaginationResponse {
+	return models.PaginationResponse{
 		Content:      content,
 		TotalElement: totalElement,
 		Page:         (offset / size) + 1,
