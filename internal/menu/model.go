@@ -1,8 +1,6 @@
-package models
+package menu
 
-import (
-	"time"
-)
+import "time"
 
 type Menu struct {
 	ID          uint64    `json:"id" pg:"id, pk"`

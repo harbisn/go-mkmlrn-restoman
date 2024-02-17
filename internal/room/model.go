@@ -1,8 +1,6 @@
-package models
+package room
 
-import (
-	"time"
-)
+import "time"
 
 type Room struct {
 	ID           uint64    `json:"id" pg:"id, pk"`
