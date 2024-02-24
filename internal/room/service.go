@@ -31,12 +31,14 @@ func (s *Service) InsertRoom(room *Room, userId string) error {
 
 func (s *Service) SelectRoom(pageable pagination.PageableDto) (pagination.PageableDto, error) {
 	log := zerolog.New(os.Stdout).With().Timestamp().Logger()
-	rooms, err := s.roomRepository.Select(pageable)
+	rooms, count, err := s.roomRepository.Select(pageable)
 	if err != nil {
 		log.Error().Err(err).Msg("Failed to select room")
 		return pagination.PageableDto{}, err
 	}
-	pageRoom := pagination.Paginate(rooms, len(rooms), pageable)
+	pageable.TotalElement = count
+	pageable.NumberOfElement = len(rooms)
+	pageRoom := pagination.Paginate(rooms, pageable)
 	return pageRoom, nil
 }
 

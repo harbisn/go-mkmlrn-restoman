@@ -34,13 +34,15 @@ func (r *Repository) Insert(menu *Menu) error {
 	return nil
 }
 
-func (r *Repository) Select(pageable pagination.PageableDto) ([]Menu, error) {
+func (r *Repository) Select(pageable pagination.PageableDto) ([]Menu, int, error) {
 	var menus []Menu
 	query := pagination.SetFilterAndPagination(r.DB.Model(&menus), pageable)
-	if err := query.Select(); err != nil {
-		return nil, err
+	var count int
+	count, err := query.SelectAndCount()
+	if err != nil {
+		return nil, 0, err
 	}
-	return menus, nil
+	return menus, count, nil
 }
 
 func (r *Repository) SelectById(id uint64) (*Menu, error) {

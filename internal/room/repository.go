@@ -34,13 +34,15 @@ func (r *Repository) Insert(room *Room) error {
 	return nil
 }
 
-func (r *Repository) Select(pageable pagination.PageableDto) ([]Room, error) {
+func (r *Repository) Select(pageable pagination.PageableDto) ([]Room, int, error) {
 	var rooms []Room
 	query := pagination.SetFilterAndPagination(r.DB.Model(&rooms), pageable)
-	if err := query.Select(); err != nil {
-		return nil, err
+	var count int
+	count, err := query.SelectAndCount()
+	if err != nil {
+		return nil, 0, err
 	}
-	return rooms, nil
+	return rooms, count, nil
 }
 
 func (r *Repository) SelectById(id uint64) (*Room, error) {

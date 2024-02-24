@@ -10,13 +10,14 @@ import (
 )
 
 type PageableDto struct {
-	Content      interface{}            `json:"content"`
-	TotalElement int                    `json:"totalElement"`
-	Page         int                    `json:"page"`
-	Size         int                    `json:"size"`
-	Offset       int                    `json:"offset"`
-	Order        string                 `json:"order"`
-	Filter       map[string]interface{} `json:"filter"`
+	Content         interface{}            `json:"content"`
+	TotalElement    int                    `json:"totalElement"`
+	NumberOfElement int                    `json:"NumberOfElement"`
+	Page            int                    `json:"page"`
+	Size            int                    `json:"size"`
+	Offset          int                    `json:"offset"`
+	Order           string                 `json:"order"`
+	Filter          map[string]interface{} `json:"filter"`
 }
 
 func GetFilterAndPagination(r *http.Request, params []string) PageableDto {
@@ -82,14 +83,15 @@ func ConvertParamJsonToDB(s string) string {
 	return string(res)
 }
 
-func Paginate(content interface{}, totalElement int, pageableDto PageableDto) PageableDto {
+func Paginate(content interface{}, pageableDto PageableDto) PageableDto {
 	return PageableDto{
-		Content:      content,
-		TotalElement: totalElement,
-		Page:         pageableDto.Page,
-		Size:         pageableDto.Size,
-		Offset:       pageableDto.Offset,
-		Order:        pageableDto.Order,
-		Filter:       pageableDto.Filter,
+		Content:         content,
+		TotalElement:    pageableDto.TotalElement,
+		NumberOfElement: pageableDto.NumberOfElement,
+		Page:            pageableDto.Page,
+		Size:            pageableDto.Size,
+		Offset:          pageableDto.Offset,
+		Order:           pageableDto.Order,
+		Filter:          pageableDto.Filter,
 	}
 }

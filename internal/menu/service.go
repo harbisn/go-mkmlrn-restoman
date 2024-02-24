@@ -31,12 +31,14 @@ func (s *Service) InsertMenu(menu *Menu, userId string) error {
 
 func (s *Service) SelectMenu(pageable pagination.PageableDto) (pagination.PageableDto, error) {
 	log := zerolog.New(os.Stdout).With().Timestamp().Logger()
-	menus, err := s.menuRepository.Select(pageable)
+	menus, count, err := s.menuRepository.Select(pageable)
 	if err != nil {
 		log.Error().Err(err).Msg("Failed to select menu")
 		return pagination.PageableDto{}, err
 	}
-	pageMenu := pagination.Paginate(menus, len(menus), pageable)
+	pageable.TotalElement = count
+	pageable.NumberOfElement = len(menus)
+	pageMenu := pagination.Paginate(menus, pageable)
 	return pageMenu, nil
 }
 
