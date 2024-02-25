@@ -15,7 +15,7 @@ func NewRoomService(r *Repository) *Service {
 	return &Service{roomRepository: r}
 }
 
-func (s *Service) InsertRoom(room *Room, userId string) error {
+func (s *Service) CreateRoom(room *Room, userId string) error {
 	log := zerolog.New(os.Stdout).With().Timestamp().Logger()
 	var currentTime = time.GetCurrentTime()
 	room.CreatedBy = userId
@@ -29,7 +29,7 @@ func (s *Service) InsertRoom(room *Room, userId string) error {
 	return err
 }
 
-func (s *Service) SelectRoom(pageable pagination.PageableDto) (pagination.PageableDto, error) {
+func (s *Service) GetRooms(pageable pagination.PageableDto) (pagination.PageableDto, error) {
 	log := zerolog.New(os.Stdout).With().Timestamp().Logger()
 	rooms, count, err := s.roomRepository.Select(pageable)
 	if err != nil {

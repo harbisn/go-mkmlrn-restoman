@@ -17,7 +17,7 @@ func NewMenuHandler(s *Service) *Handler {
 
 const BadRequestMessage = "Request can't be parsed."
 
-func (h *Handler) InsertMenuHandler(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) CreateMenuHandler(w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
 	var menu Menu
 	err := decoder.Decode(&menu)
@@ -26,7 +26,7 @@ func (h *Handler) InsertMenuHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	userId := r.Header.Get("x-user-id")
-	err = h.menuService.InsertMenu(&menu, userId)
+	err = h.menuService.CreateMenu(&menu, userId)
 	if err != nil {
 		handler.WriteFailResponse(w, http.StatusInternalServerError, "Failed to insert new menu.")
 		return
@@ -35,10 +35,10 @@ func (h *Handler) InsertMenuHandler(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-func (h *Handler) SelectMenuHandler(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) GetMenusHandler(w http.ResponseWriter, r *http.Request) {
 	params := []string{"status", "category", "highestPrice", "lowestPrice"}
 	pageableDto := pagination.GetFilterAndPagination(r, params)
-	pageMenu, err := h.menuService.SelectMenu(pageableDto)
+	pageMenu, err := h.menuService.GetMenus(pageableDto)
 	if err != nil {
 		handler.WriteFailResponse(w, http.StatusInternalServerError, "Failed to select menu.")
 		return

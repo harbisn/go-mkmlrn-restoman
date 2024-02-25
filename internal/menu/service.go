@@ -15,7 +15,7 @@ func NewMenuService(r *Repository) *Service {
 	return &Service{menuRepository: r}
 }
 
-func (s *Service) InsertMenu(menu *Menu, userId string) error {
+func (s *Service) CreateMenu(menu *Menu, userId string) error {
 	log := zerolog.New(os.Stdout).With().Timestamp().Logger()
 	var currentTime = time.GetCurrentTime()
 	menu.CreatedBy = userId
@@ -29,7 +29,7 @@ func (s *Service) InsertMenu(menu *Menu, userId string) error {
 	return err
 }
 
-func (s *Service) SelectMenu(pageable pagination.PageableDto) (pagination.PageableDto, error) {
+func (s *Service) GetMenus(pageable pagination.PageableDto) (pagination.PageableDto, error) {
 	log := zerolog.New(os.Stdout).With().Timestamp().Logger()
 	menus, count, err := s.menuRepository.Select(pageable)
 	if err != nil {

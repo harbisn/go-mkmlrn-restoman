@@ -34,15 +34,16 @@ func main() {
 	r := mux.NewRouter()
 	http.Handle("/", r)
 
-	r.HandleFunc("/restoman/menus", newMenuHandler.InsertMenuHandler).Methods("POST")
-	r.HandleFunc("/restoman/menus", newMenuHandler.SelectMenuHandler).Methods("GET")
+	r.HandleFunc("/restoman/menus", newMenuHandler.CreateMenuHandler).Methods("POST")
+	r.HandleFunc("/restoman/menus", newMenuHandler.GetMenusHandler).Methods("GET")
 	r.HandleFunc("/restoman/menus/{id}", newMenuHandler.UpdateMenuHandler).Methods("PATCH")
 
-	r.HandleFunc("/restoman/rooms", newRoomHandler.InsertRoomHandler).Methods("POST")
-	r.HandleFunc("/restoman/rooms", newRoomHandler.SelectRoomHandler).Methods("GET")
+	r.HandleFunc("/restoman/rooms", newRoomHandler.CreateRoomHandler).Methods("POST")
+	r.HandleFunc("/restoman/rooms", newRoomHandler.GetRoomsHandler).Methods("GET")
 	r.HandleFunc("/restoman/rooms/{id}", newRoomHandler.UpdateRoomHandler).Methods("PATCH")
 
 	r.HandleFunc("/restoman/reservations", newReservationHandler.CreateReservationHandler).Methods("POST")
+	r.HandleFunc("/restoman/reservations", newReservationHandler.GetReservationsHandler).Methods("GET")
 
 	fmt.Printf("Starting restoman server at port 8080\n")
 	if err := http.ListenAndServe("localhost:8080", nil); err != nil {

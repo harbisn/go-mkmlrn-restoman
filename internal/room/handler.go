@@ -17,7 +17,7 @@ func NewRoomHandler(s *Service) *Handler {
 
 const BadRequestMessage = "Request can't be parsed."
 
-func (h *Handler) InsertRoomHandler(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) CreateRoomHandler(w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
 	var room Room
 	err := decoder.Decode(&room)
@@ -26,7 +26,7 @@ func (h *Handler) InsertRoomHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	userId := r.Header.Get("x-user-id")
-	err = h.roomService.InsertRoom(&room, userId)
+	err = h.roomService.CreateRoom(&room, userId)
 	if err != nil {
 		handler.WriteFailResponse(w, http.StatusInternalServerError, "Failed to insert new room.")
 		return
@@ -35,10 +35,10 @@ func (h *Handler) InsertRoomHandler(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-func (h *Handler) SelectRoomHandler(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) GetRoomsHandler(w http.ResponseWriter, r *http.Request) {
 	params := []string{"status", "capacity", "highestPricePerHour", "lowestPricePerHour"}
 	pageableDto := pagination.GetFilterAndPagination(r, params)
-	pageRoom, err := h.roomService.SelectRoom(pageableDto)
+	pageRoom, err := h.roomService.GetRooms(pageableDto)
 	if err != nil {
 		handler.WriteFailResponse(w, http.StatusInternalServerError, "Failed to select room.")
 		return
