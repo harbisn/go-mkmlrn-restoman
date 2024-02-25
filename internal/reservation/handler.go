@@ -5,6 +5,7 @@ import (
 	"github.com/harbisn/go-mkmlrn-restoman/internal/helper/handler"
 	"github.com/harbisn/go-mkmlrn-restoman/internal/helper/pagination"
 	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 	"net/http"
 	"os"
 )
@@ -23,7 +24,7 @@ func (h *Handler) CreateReservationHandler(w http.ResponseWriter, r *http.Reques
 	log := zerolog.New(os.Stdout).With().Timestamp().Logger()
 
 	decoder := json.NewDecoder(r.Body)
-	var requestDto CreateReservationRequestDto
+	var requestDto RequestDto
 	err := decoder.Decode(&requestDto)
 	if err != nil {
 		log.Error().Err(err).Msgf("error while parsing request %s", err.Error())
@@ -49,4 +50,22 @@ func (h *Handler) GetReservationsHandler(w http.ResponseWriter, r *http.Request)
 		return
 	}
 	handler.WriteSuccessResponse(w, http.StatusOK, pageReservation, nil)
+}
+
+func (h *Handler) GetAvailableTimes(w http.ResponseWriter, r *http.Request) {
+	decoder := json.NewDecoder(r.Body)
+	var requestDto RequestDto
+	err := decoder.Decode(&requestDto)
+	if err != nil {
+		log.Error().Err(err).Msgf("error while parsing request %s", err.Error())
+		handler.WriteFailResponse(w, http.StatusBadRequest, BadRequestMessage)
+		return
+	}
+	availableTimes, err := h.reservationService.GetAvailableTimes(requestDto.RoomID, requestDto.StartAt)
+	if err != nil {
+		handler.WriteFailResponse(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	handler.WriteSuccessResponse(w, http.StatusOK, availableTimes, nil)
+	return
 }

@@ -44,6 +44,7 @@ func main() {
 
 	r.HandleFunc("/restoman/reservations", newReservationHandler.CreateReservationHandler).Methods("POST")
 	r.HandleFunc("/restoman/reservations", newReservationHandler.GetReservationsHandler).Methods("GET")
+	r.HandleFunc("/restoman/reservations/times", newReservationHandler.GetAvailableTimes).Methods("GET")
 
 	fmt.Printf("Starting restoman server at port 8080\n")
 	if err := http.ListenAndServe("localhost:8080", nil); err != nil {

@@ -43,10 +43,7 @@ func (r *Repository) Select(pageable pagination.PageableDto) ([]Reservation, int
 	if err != nil {
 		return nil, 0, err
 	}
-	reservations := make([]Reservation, len(reservationsFromDB))
-	for i, dbReservation := range reservationsFromDB {
-		reservations[i] = MapToWithLocalTime(dbReservation)
-	}
+	reservations := MapListToWithLocalTime(reservationsFromDB)
 	return reservations, count, nil
 }
 
@@ -78,5 +75,16 @@ func (r *Repository) FindReservationsWithinTimeRange(roomId uint64, startAt, end
 	if err != nil {
 		return nil, err
 	}
+	return reservations, nil
+}
+
+func (r *Repository) FindByDate(roomId uint64, startAt time.Time) ([]Reservation, error) {
+	var reservationsFromDB []Reservation
+	err := r.DB.Model(&reservationsFromDB).Where("room_id = ?", roomId).
+		Where("date(start_at) = ?", startAt).Select()
+	if err != nil {
+		return nil, err
+	}
+	reservations := MapListToWithLocalTime(reservationsFromDB)
 	return reservations, nil
 }

@@ -26,7 +26,7 @@ type Reservation struct {
 	UpdatedAt       time.Time `pg:"default:now()" json:"updatedAt"`
 }
 
-type CreateReservationRequestDto struct {
+type RequestDto struct {
 	Name         string `json:"name"`
 	CustomerName string `json:"customerName"`
 	PhoneNumber  string `json:"phoneNumber"`
@@ -35,6 +35,13 @@ type CreateReservationRequestDto struct {
 	Attendee     int8   `json:"attendee"`
 	StartAt      string `json:"StartAt"`
 	EndAt        string `json:"endAt"`
+}
+
+type AvailableTimeDto struct {
+	RoomID  uint64    `json:"roomId"`
+	StartAt time.Time `pg:"default:now()" json:"startAt"`
+	EndAt   time.Time `pg:"default:now()" json:"endAt"`
+	Hours   int       `json:"hours"`
 }
 
 func CalculateHours(startAt, endAt time.Time) int {
@@ -48,7 +55,7 @@ func CalculatePrice(hours int, pricePerHours int32) int32 {
 func GenerateReservationCode(roomId uint64) string {
 	strRoomId := strconv.Itoa(int(roomId))
 	currentTime := restomantime.GetCurrentTime()
-	return "R" + strRoomId + strconv.Itoa(currentTime.Nanosecond())
+	return "R" + strRoomId + strconv.Itoa(currentTime.Second())
 }
 
 func ValidateBookingTime(startAt, endAt time.Time) error {
@@ -66,7 +73,7 @@ func ValidateAttendee(attendee, capacity int8) error {
 }
 
 // MapFromRequestWithMetaData set data from request and metadata
-func MapFromRequestWithMetaData(requestDto *CreateReservationRequestDto, userId string) *Reservation {
+func MapFromRequestWithMetaData(requestDto *RequestDto, userId string) *Reservation {
 	currentTime := restomantime.GetCurrentTime()
 	return &Reservation{
 		Name:            requestDto.Name,
@@ -103,5 +110,28 @@ func MapToWithLocalTime(reservationFromDB Reservation) Reservation {
 		CreatedAt:       reservationFromDB.CreatedAt.In(location),
 		UpdatedBy:       reservationFromDB.UpdatedBy,
 		UpdatedAt:       reservationFromDB.UpdatedAt.In(location),
+	}
+}
+
+func MapListToWithLocalTime(reservationsFromDB []Reservation) []Reservation {
+	reservations := make([]Reservation, len(reservationsFromDB))
+	for i, dbReservation := range reservationsFromDB {
+		reservations[i] = MapToWithLocalTime(dbReservation)
+	}
+	return reservations
+}
+
+func GetOperationalHours(t time.Time) (time.Time, time.Time) {
+	loc := restomantime.GetLocation()
+	to := time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, loc)
+	return to.Add(16 * time.Hour), to.Add(23 * time.Hour)
+}
+
+func SetAvailableTime(roomId uint64, startAt, endAt time.Time) AvailableTimeDto {
+	return AvailableTimeDto{
+		RoomID:  roomId,
+		StartAt: startAt,
+		EndAt:   endAt,
+		Hours:   CalculateHours(startAt, endAt),
 	}
 }
